@@ -1,5 +1,5 @@
 # -Text-Summarization-Using-Transformers-Hugging-Face-Pegasus-
-Code Overview 
+Code Overview: 
 This code leverages the Hugging Face transformers library and the Pegasus model, specifically 
 fine-tuned on the XSum dataset, to perform abstractive text summarization. The user interacts 
 with the code through a graphical interface created with ipywidgets in a Google Colab. 
