@@ -1,0 +1,54 @@
+from transformers import PegasusForConditionalGeneration, PegasusTokenizer 
+import ipywidgets as widgets 
+from IPython.display import display 
+ 
+# Load the tokenizer and model 
+tokenizer = PegasusTokenizer.from_pretrained("google/pegasus-xsum") 
+model = PegasusForConditionalGeneration.from_pretrained("google/pegasus-xsum") 
+ 
+# Define the summarization function 
+def summarize_text(input_text): 
+    try: 
+        # Tokenize input text 
+        tokens = tokenizer(input_text, truncation=True, padding="longest", return_tensors="pt") 
+ 
+        # Generate summary 
+        summary_ids = model.generate(**tokens) 
+        summary = tokenizer.decode(summary_ids[0], skip_special_tokens=True) 
+ 
+        # Display the result 
+        summary_output.value = summary 
+    except Exception as e: 
+        summary_output.value = f"Error: {str(e)}" 
+ 
+# Create input and output widgets 
+input_text_area = widgets.Textarea( 
+    description="Input Text:", 
+    placeholder="Enter the text you want to summarize here...", 
+    layout=widgets.Layout(width='100%', height='200px') 
+) 
+ 
+summary_output = widgets.Textarea( 
+    description="Summary:", 
+    disabled=True, 
+    layout=widgets.Layout(width='100%', height='200px') 
+) 
+ 
+summarize_button = widgets.Button( 
+    description="Summarize", 
+    button_style="primary", 
+    tooltip="Click to summarize the text" 
+) 
+ 
+# Define button click event 
+def on_button_click(b): 
+    summarize_text(input_text_area.value) 
+ 
+# Display the interface 
+display(widgets.VBox([ 
+    input_text_area, 
+    summarize_button, 
+    summary_output 
+])) 
+ 
+summarize_button.on_click(on_button_click)
